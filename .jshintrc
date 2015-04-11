@@ -1,0 +1,11 @@
+// for full list of options, check http://jshint.com/docs/options/
+{
+    "strict": true,
+    "globalstrict": true,
+    "browser": true,
+    "shadow": "outer",
+    "undef": true,
+    "unused": true,
+    "curly": true,
+    "predef": [ "MY_GLOBAL" ]
+}
