@@ -5,19 +5,18 @@ var gulp = require('gulp');
 
 var changed = require('gulp-changed');
 
-// image optimizers
+// image optimizer & resize
+var pngquant = require('imagemin-pngquant');
 var optipng = require('imagemin-optipng');
 var gifsicle = require('imagemin-gifsicle');
 var jpegtran = require('imagemin-jpegtran');
-var Imagemin = require('imagemin');
-
-// image resize
-var imgResize = require('gulp-image-resize');
 
 // code optimizers
+var stripDebug = require('gulp-strip-debug');
 var minifyHTML = require('gulp-minify-html');
 var minifyCSS = require('gulp-minify-css');
 var minifyJS = require('gulp-uglify');
+var gzip = require('gulp-gzip');
 
 // code linters
 var jshint = require('gulp-jshint');
@@ -25,46 +24,38 @@ var stylish = require('jshint-stylish');
 
 // paths
 var SRC = "src/";
-var DEST = "prod/";
+var DEST = "dist/";
 
 gulp.task('default',
     [
     'lint',
-    'css',
-    'js',
-    'html',
-    'imgResize',
-    //'png',
-    //'jpeg',
-    //'gif'
+    'minify_js',
+    'minify_html',
+    'compress_css',
+    'compress_jpeg',
+    'compress_png',
+    'compress_gif'
     //,'watch'
     ],  function() {
     // nothing
 });
 
 gulp.task('lint', function() {
-  return gulp.src(SRC + 'js/*.js')
+  return gulp.src(SRC + '**/*.js')
     .pipe(jshint())
-    //.pipe(jshint.reporter('default'));
     .pipe(jshint.reporter(stylish))
 
 });
 
-gulp.task('css', function() {
-  return gulp.src(SRC + '**/*.css')
-    .pipe(minifyCSS({keepBreaks:true}))
-    .pipe(gulp.dest(DEST));
-});
-
-gulp.task('js', function() {
+gulp.task('minify_js', function() {
     return gulp.src(SRC + '**/*.js', {base: SRC})
     .pipe(changed(DEST))
     .pipe(minifyJS())
-    //.pipe(rename({ extname: '.min.js' }))
+    .pipe(stripDebug())
     .pipe(gulp.dest(DEST));
 });
 
-gulp.task('html', function() {
+gulp.task('minify_html', function() {
     return gulp.src(SRC + '**/*.html', {base: SRC})
     .pipe(changed(DEST))
     .pipe(minifyHTML({
@@ -73,39 +64,28 @@ gulp.task('html', function() {
     .pipe(gulp.dest(DEST));
 });
 
-gulp.task('jpgs', function() {
-    return gulp.src('**/*.{gif,jpg,png,svg}')
-    .pipe(imagemin({ progressive: true }))
+gulp.task('compress_css', function() {
+    return gulp.src(SRC + '**/*.css', {base: SRC})
+    .pipe(minifyCSS({keepBreaks:true}))
+    .pipe(gzip())
     .pipe(gulp.dest(DEST));
 });
 
-
-gulp.task('imgResize', function () {
-  gulp.src(SRC + 'views/images/pizzeria.jpg')
-    .pipe(imgResize({
-        width : 100,
-        height : 100,
-        crop : true,
-        upscale : false
-    }))
+gulp.task('compress_jpeg', function() {
+    return gulp.src(SRC + '**/*.jpg', {base: SRC})
+    .pipe(jpegtran({ progressive: true,
+                     optimize: true })())
     .pipe(gulp.dest(DEST));
 });
 
-gulp.task('png', function() {
+gulp.task('compress_png', function() {
     return gulp.src(SRC + '**/*.png', {base: SRC})
     .pipe(changed(DEST))
     .pipe(optipng({optimizationLevel: 3})())
     .pipe(gulp.dest(DEST));
 });
 
-gulp.task('jpeg', function() {
-    return gulp.src(SRC + '**/*.{jpg,jpeg}', {base: SRC})
-    .pipe(changed(DEST))
-    .pipe(jpegtran({progressive: true})())
-    .pipe(gulp.dest(DEST));
-});
-
-gulp.task('gif', function() {
+gulp.task('compress_gif', function() {
     return gulp.src(SRC + '**/*.gif', {base: SRC})
     .pipe(changed(DEST))
     .pipe(gifsicle({interlaced: true})())
