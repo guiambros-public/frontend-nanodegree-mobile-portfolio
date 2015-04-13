@@ -33,6 +33,13 @@ form {
   position: fixed;
   width: 256px;
   z-index: -1;
+
+  /* OPTIMIZATION #6:
+     Used the backface-visibility trick to get all .mover images into its own layer, so we don't need
+     to repaint the entire screen after each transformation, as mentioned in the Office Hours.
+     Documentation: https://developer.mozilla.org/en-US/docs/Web/CSS/backface-visibility
+   */
+  backface-visibility: hidden;
 }
 
 .randomPizzaContainer {

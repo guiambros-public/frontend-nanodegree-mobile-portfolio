@@ -1,3 +1,71 @@
+# Project P4
+
+## Exercise 1 - Portfolio page - optimizations
+
+1. All images optimized
+2. All js/html/css files minified, with debug and comments stripped out
+3. Create thumbnail for image pizzeria.jpg (100x75), instead of a 2MB+ file
+4. Reduced resolution for pizzeria.jpg (to 400x300), instead of a 2048x1536
+5. Async load of all scripts
+6. Modified script to load fonts asynchronously
+7. CSS moved to in-line (or adding media tags), to avoid blocking CRP
+
+Items 1-4 above were done done using [Gulp](http://gulpjs.com/), so the files can be easily re-generated whenever there is an update. Source files were moved to `src` sub-folder. Final, production-ready files are under `dist`.
+
+Items 4-6 were done directly in the HTML files.
+
+Files were hosted locally and exposted using ngrok, so it could be tested with Google Page Insights. All pages got closer to the maximum score, except for the pizza.html, per comments below. The remaining recomendations from Google to get the maximum score not usually not applicable (e.g., increase the 2h cache of analytics.gs, which is already hosted by Google themselves).
+
+Scores:
+
+- index.html - 99/100, 99/100
+- project-2048.thml - 95/100, 96/100
+- project-webperf.html - 99/100, 99/100
+- project-mobile.html - 96/100, 99/100
+- views/pizza.html - 82/100, 92/100 (*)
+
+(*) For the pizza.html, I opted for leaving the blocking CSS files, so the html/css could still be easily read, for exercise #2. Also, further compressing the images as suggested by Google Page Insights would reduce the quality to an extreme.
+
+
+## Exercise 2 - Pizzeria Page - Critical Rendering Path optimization
+
+Several optimizations were implemented:
+
+**Optimization #1**
+Reduced the number of pizzas generated from 200 to 4 * columns = 32
+
+**Optimization 2**
+Moved items to a global variable, so we don't need to query the DOM every time
+we upate the position
+
+**Optimization 3**
+Removed all unecessary calculations from the inner loop of updatePositions()
+
+**Optimization 4**
+Instead of calculating Sin for each element (x 32 times), we calculate only the
+5 possible distinct values
+
+**Optimization 5**
+Use CSS3 transform, instead of style.left. This improves performance a bit
+
+**Optimization 6**
+Used the backface-visibility trick to get images into its own composite layer, so we don't need
+to repaint the entire screen after each transformation.
+
+
+## References used
+
+[Loading fonts asynchronously](https://github.com/typekit/webfontloader)
+[Sitepoint - Optimizing the Critical Rendering Path](http://www.sitepoint.com/optimizing-critical-rendering-path/)
+[Google Dev - Optimize CSS Delivery](https://developers.google.com/speed/docs/insights/OptimizeCSSDelivery)
+[Google Dev - Webfont optimization](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/webfont-optimization)
+[Blog post - getting started with Gulp](https://travismaynard.com/writing/getting-started-with-gulp)
+[Mozzila Documentation - Backface-visibility](https://developer.mozilla.org/en-US/docs/Web/CSS/backface-visibility)
+
+
+
+# Original README.md follows...
+
 ## Website Performance Optimization portfolio project
 
 Your challenge, if you wish to accept it (and we sure hope you will), is to optimize this online portfolio for speed! In particular, optimize the critical rendering path and make this page render as quickly as possible by applying the techniques you've picked up in the [Critical Rendering Path course](https://www.udacity.com/course/ud884).
@@ -32,7 +100,7 @@ Profile, optimize, measure... and then lather, rinse, and repeat. Good luck!
 
 ####Part 2: Optimize Frames per Second in pizza.html
 
-To optimize views/pizza.html, you will need to modify views/js/main.js until your frames per second rate is 60 fps or higher. You will find instructive comments in main.js. 
+To optimize views/pizza.html, you will need to modify views/js/main.js until your frames per second rate is 60 fps or higher. You will find instructive comments in main.js.
 
 You might find the FPS Counter/HUD Display useful in Chrome developer tools described here: [Chrome Dev Tools tips-and-tricks](https://developer.chrome.com/devtools/docs/tips-and-tricks).
 
