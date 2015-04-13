@@ -8,5 +8,5 @@
     "undef": true,
     "unused": true,
     "curly": true,
-    "predef": [ "MY_GLOBAL" ]
+    // "predef": [ "MY_GLOBAL" ]
 }
