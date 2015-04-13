@@ -56,10 +56,15 @@ to repaint the entire screen after each transformation.
 ## References used
 
 [Loading fonts asynchronously](https://github.com/typekit/webfontloader)
+
 [Sitepoint - Optimizing the Critical Rendering Path](http://www.sitepoint.com/optimizing-critical-rendering-path/)
+
 [Google Dev - Optimize CSS Delivery](https://developers.google.com/speed/docs/insights/OptimizeCSSDelivery)
+
 [Google Dev - Webfont optimization](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/webfont-optimization)
+
 [Blog post - getting started with Gulp](https://travismaynard.com/writing/getting-started-with-gulp)
+
 [Mozzila Documentation - Backface-visibility](https://developer.mozilla.org/en-US/docs/Web/CSS/backface-visibility)
 
 
